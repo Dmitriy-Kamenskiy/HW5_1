@@ -26,10 +26,12 @@ public class Basket {
 
     public void addToCart(int productNum, int amount) throws IOException {
         productCounts[productNum] += amount;
-        if (Main.isTxtBasket) {
-            saveTxt(Main.textFile);
-        } else {
-            saveJson(Main.jsonFile);
+        if (Main.isSave) {
+            if (Main.typeFileSave.equals("text")) {
+                saveTxt(Main.textFile);
+            } else {
+                saveJson(Main.jsonFile);
+            }
         }
         clientLog.log(productNum, amount);
     }
@@ -66,7 +68,7 @@ public class Basket {
             String inputString = scanner.nextLine();
             if ("end".equals(inputString)) {
                 printCart();
-                clientLog.exportAsCSV(new File("log.csv"));
+                clientLog.exportAsCSV(Main.logFile);
                 break;
             }
             String[] parts = inputString.split(" ");

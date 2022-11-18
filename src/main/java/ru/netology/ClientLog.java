@@ -41,7 +41,6 @@ public class ClientLog {
                     .add("productNum")
                     .add("amount");
             String[] logArrayForCsv = logItem.toString().split(",");
-            System.out.println(logItem);
 
             writer.writeNext(logArrayForCsv);
             for (Integer[] clientLog : clientLogs){
