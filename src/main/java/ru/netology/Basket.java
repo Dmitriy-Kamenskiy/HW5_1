@@ -1,5 +1,7 @@
 package ru.netology;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -7,7 +9,7 @@ import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.util.*;
-import java.util.stream.IntStream;
+
 
 import static java.util.stream.Collectors.toList;
 
@@ -37,22 +39,12 @@ public class Basket {
     }
 
     public void saveJson(File jsonFile){
-        JSONObject basket = new JSONObject();
-        JSONArray productsJson = new JSONArray();
-        productsJson.addAll(List.of(products));
 
-        basket.put("productsJ", productsJson);
-        JSONArray pricesJson = new JSONArray();
-        Integer [] integerPrices = IntStream.of(prices).boxed().toArray(Integer []::new);
-        Integer [] integerProductCounts = IntStream.of(productCounts).boxed().toArray(Integer []::new);
-        pricesJson.addAll(List.of(integerPrices));
-        basket.put("pricesJ", pricesJson);
-        JSONArray productCountsJson = new JSONArray();
-        productCountsJson.addAll(List.of(integerProductCounts));
-        basket.put("productCountsJ", productCountsJson);
-        System.out.println(basket.toJSONString());
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+
         try (FileWriter file = new FileWriter(jsonFile)) {
-            file.write(basket.toJSONString());
+            file.write(gson.toJson(this));
             file.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -135,9 +127,9 @@ public class Basket {
 
             Object obj = parser.parse(new FileReader(jsonFile));
             JSONObject basketParsedJson = (JSONObject) obj;
-            JSONArray productsJson = (JSONArray)basketParsedJson.get("productsJ");
-            JSONArray pricesJson = (JSONArray)basketParsedJson.get("pricesJ");
-            JSONArray productCountsJson = (JSONArray)basketParsedJson.get("productCountsJ");
+            JSONArray productsJson = (JSONArray)basketParsedJson.get("products");
+            JSONArray pricesJson = (JSONArray)basketParsedJson.get("prices");
+            JSONArray productCountsJson = (JSONArray)basketParsedJson.get("productCounts");
 
             productsL = new String[productsJson.size()];
             pricesL = new int[productsJson.size()];

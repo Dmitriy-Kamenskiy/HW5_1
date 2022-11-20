@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <config>
     <load>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
         <fileName>basket.json</fileName>
         <format>json</format>
     </load>
