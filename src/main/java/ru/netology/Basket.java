@@ -116,7 +116,8 @@ public class Basket {
             System.out.println(exception.getMessage());
         }
     }
-
+    
+    
     public static Basket loadFromJsonFile(File jsonFile) throws IOException, ParseException {
         String[] productsL;
         int[] pricesL;
@@ -124,21 +125,14 @@ public class Basket {
 
         if (jsonFile.exists()) {
             JSONParser parser = new JSONParser();
-
             Object obj = parser.parse(new FileReader(jsonFile));
-            JSONObject basketParsedJson = (JSONObject) obj;
-            JSONArray productsJson = (JSONArray)basketParsedJson.get("products");
-            JSONArray pricesJson = (JSONArray)basketParsedJson.get("prices");
-            JSONArray productCountsJson = (JSONArray)basketParsedJson.get("productCounts");
 
-            productsL = new String[productsJson.size()];
-            pricesL = new int[productsJson.size()];
-            productCountsL = new int[productsJson.size()];
-            for (int i = 0; i < productsJson.size(); i++) {
-                productsL[i] = (String) productsJson.get(i);
-                pricesL[i] =  Integer.parseInt(pricesJson.get(i).toString());
-                productCountsL[i] = Integer.parseInt(productCountsJson.get(i).toString());
-            }
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+            Basket basket1 = gson.fromJson(obj.toString(), Basket.class);
+            productsL = basket1.products;
+            pricesL = basket1.prices;
+            productCountsL = basket1.productCounts;
         } else {
             productsL = new String[]{"Хлеб", "Яблоки", "Молоко"};
             pricesL = new int[]{100, 200, 300};
@@ -146,10 +140,12 @@ public class Basket {
         }
 
         Basket basket = new Basket(productsL, pricesL, productCountsL);
+
         basket.printMenuCustomer();
         basket.basketShop();
         return basket;
     }
+    
     public static Basket loadFromTxtFile (File textFile) throws IOException {
         String[] productsL;
         int[] pricesL;
